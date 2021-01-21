@@ -20,6 +20,8 @@
 `define REG_SPIADR 3'b011
 `define REG_SPILEN 3'b100
 `define REG_SPIDUM 3'b101
+`define REG_RXFIFO 3'b110
+`define REG_TXFIFO 3'b111
 
 module spi_master_axi_if #(
       parameter AXI4_ADDRESS_WIDTH = 32,
@@ -131,8 +133,8 @@ module spi_master_axi_if #(
   assign wr_addr = s_axi_awaddr[WR_ADDR_CMP+4:WR_ADDR_CMP];
   assign rd_addr = s_axi_araddr[RD_ADDR_CMP+4:RD_ADDR_CMP];
 
-  assign is_tx_fifo_sel = (wr_addr[3] == 1'b1);
-  assign is_rx_fifo_sel = (rd_addr[4] == 1'b1);
+  assign is_tx_fifo_sel = wr_addr == `REG_TXFIFO;
+  assign is_rx_fifo_sel = rd_addr == `REG_RXFIFO;
 
   assign spi_data_tx = s_axi_wdata[31:0];
 
